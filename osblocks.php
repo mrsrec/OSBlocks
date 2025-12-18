@@ -15,7 +15,7 @@ class OSBlocks {
 	}
 	
 	public static function onApiCheckCanExecute($module, $user, &$message) {
-		if (!$user->isAllowed('block') && self::isBlockListApi($module)) {
+		if (!$user->isAllowed('block') && self::isBlockListApi($module) || self::isBlockInfoApi($module)) {
 			$message = 'badaccess';
 		
 			return false;
@@ -28,6 +28,12 @@ class OSBlocks {
 		$params = $module->extractRequestParams();
 				
 		return isset($params['list']) && in_array('blocks', $params['list']);
+	}
+
+	private static function isBlockInfoApi($module) {
+		$params = $module->extractRequestParams();
+				
+		return isset($params['usprop']) && in_array('blockinfo', $params['usprop']);
 	}
 	
 	private static function isDisallowedSpecialPage($title) {
